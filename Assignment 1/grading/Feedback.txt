@@ -1,0 +1,9 @@
+
+Assignment 1: Algorithms in MapReduce
+
+Should use the "emit" function in given MapReduce.py in your reducer step to print the outcome. 
+
+For Problem 1: notice that the input data type may be integers. Points deducted for not outputing integer outcomes.
+
+For Problem 2: should not round your result (as instructed in output format README.txt). No points deducted for this time, but be careful next time.
+
