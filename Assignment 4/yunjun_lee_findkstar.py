@@ -51,11 +51,11 @@ def findkstar(data_points, theta):
                 quit()
             cluster_v, cohesion_v = km.kmeans(dps, 2**(k-1))
             cluster_2v, cohesion_2v = km.kmeans(dps, 2**k)
-            rate_of_chg = abs(cohesion_v - cohesion_2v) / (cohesion_v*abs(2**k))
+            rate_of_chg = abs(cohesion_v - cohesion_2v) / (cohesion_v*abs(2**(k-1)))
             #print rate_of_chg
             if rate_of_chg < t: keep_clustering = False
         #print "Pick interval:", 2**(k-1), 2**k
-        return 2**(k-1)
+        return 2**(k-2)
 
     def binarySearch(left, dps, t):
         """
@@ -71,7 +71,7 @@ def findkstar(data_points, theta):
             midpoint = (right+left)/2                   # midpoint for binary search
             cluster_m, cohesion_m = km.kmeans(dps, midpoint)
             cluster_r, cohesion_r = km.kmeans(dps, right)
-            rate_of_chg = abs(cohesion_r - cohesion_m) / (cohesion_r*abs(right-midpoint))
+            rate_of_chg = abs(cohesion_r - cohesion_m) / (cohesion_m*abs(right-midpoint))
             #print rate_of_chg
             if rate_of_chg > t: left = midpoint         # [z,y] is qualified => stay at [z,y]
             if rate_of_chg < t: right = midpoint        # [z,y] is not qualified => switch to [x,z]

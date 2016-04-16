@@ -50,8 +50,8 @@ def recommend(inputdata_record, inputdata_lsh):
                     similarities.append([common_element/all_element, cand])
                 similarities.sort(reverse=True)
                 last = 4                   # Index of last element in top-five (or more)
-                while similarities[last][0] == similarities[last+1][0]:
-                    last += 1
+                while last+1 < len(similarities) and similarities[last][0] == similarities[last+1][0]:
+                    last += 1              # Fix the incorrect comparison according to Feedback
                 for i in xrange(last+1, len(alike_users)):  # Remove un-desired elements
                     alike_users.remove(similarities[i][1])
         return sim_usrs
@@ -78,8 +78,9 @@ def recommend(inputdata_record, inputdata_lsh):
                     rec_list.append(movie)      # movie must be watched by at least 3 users
             if len(rec_list) > 0:
                 recommendations.append([user, rec_list])
-        #print sorted(recommendations)
-        return sorted(recommendations)
+        for i in sorted(recommendations):
+            print i               # Fix the incorrect output according to Feedback
+        return
 
 # Below this line are the main part.
     user_exp = {}                           # All user experience
@@ -90,7 +91,6 @@ def recommend(inputdata_record, inputdata_lsh):
     top_five_list = findtopfive(user_exp, similar_users)    # Step 2
     recommendations = endorsement(user_exp, top_five_list)  # Step 3
 
-    return recommendations
 # Do not modify below this line
 # =============================
 if __name__ == '__main__':

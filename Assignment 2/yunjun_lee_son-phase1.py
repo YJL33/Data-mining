@@ -38,6 +38,7 @@ def mapper(chunk):
     """
     candidates_list = Apriori.apriori(chunk, False)
     for each_candidate in candidates_list:
+        print type(each_candidate)
         mr.emit_intermediate(tuple(each_candidate), 1)
 
 def reducer(key, list_of_values):
