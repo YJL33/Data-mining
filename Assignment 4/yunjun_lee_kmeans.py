@@ -73,7 +73,6 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
 
     def initCentroids(datapoints, k_clusters):
         """
-        (Step 1.)
         Pick and return k initial centroids.
         The first initial centroid is the first one in all the datapoints,
         The next initial centroid is the one has the maximum "min-distance" to all other centroids.
@@ -99,8 +98,6 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
         """
         Update the centroids after the clustering is done.
         Given data points in a cluster (a list), return the centroid of these data points.
-
-        (Only used in step 2. cluster)
         """
         new_centroid_pos = [0]*len(data_points_in_a_cluster[0])     # Calculate as list
         for dp in data_points_in_a_cluster:
@@ -116,8 +113,6 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
         input: a dictionary, key = cluster (group) id, values = data points in the same cluster
         cohesion: average of cluster diameter - max distance between any two points in each cluster
         return cohesion
-
-        (Only used in step 3.)
         """
         cohesion = []                       # Use a list to store diameter of each cluster
         for cluster_dps in sorted(cluster_dict.values()):
@@ -133,11 +128,9 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
         arguments
         final_result: if True => return the final result
 
-        (Step 2.)
         Given datapoints and centroids, assign each datapoint into a cluster.
         Next, update the centroids and return nothing
 
-        (Step 3.)
         If criteria is met (centroids remain unchanged), stdout/return:
         1. k clusters, each as one line.
         2. the cohesion.
@@ -155,8 +148,7 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
 
         for i in xrange(len(cluster_dict)):
             centroids[i] = calcCentroids(cluster_dict[i])   # Update the centroids
-
-        #for v in sorted(cluster_dict.values()): print v
+        #for v in sorted(cluster_dict.values()): print v    # DEBUG
 
         if final_result:              # If the criteria is met...
             clusters = []
@@ -173,18 +165,19 @@ def kmeans(data_points, k_clusters, find_k_stars=False):
     # Below this line are the main part of kmeans().
 
     if k_clusters >= len(data_points): k_clusters = len(data_points)
-    centroids = initCentroids(data_points, k_clusters)                      # Step 1.
-    keep_clustering = True
+    centroids = initCentroids(data_points, k_clusters)                  # Step 1. Initialize
+
+    keep_clustering = True                                              # Step 2. Clustering
     while keep_clustering:
-        old_centroids = []                  # old centroids
+        old_centroids = []                              # old centroids
         for i in centroids: old_centroids.append(i)
+        cluster(data_points, centroids)
         #print "Cents:", sorted(old_centroids)  # DEBUG
-        cluster(data_points, centroids)                                     # Step 2.
         #print "New Cents:", sorted(centroids)  # DEBUG
-        if old_centroids == centroids:      # if centroids remain the same => Step 3.
-            cluster, cohesion = cluster(data_points, centroids, True)
-            keep_clustering = False
-            return sorted(cluster), cohesion        # Return as assigned
+        if old_centroids == centroids: keep_clustering = False    # End loop when riteria is met
+
+    cluster, cohesion = cluster(data_points, centroids, True)           # Step 3. Output
+    return sorted(cluster), cohesion        # Return as assigned
 
 # Do not modify below this line
 # =============================
@@ -194,8 +187,8 @@ if __name__ == '__main__':
     dp = []                 # data points
     for l in f:             # Read them all
         dp.append(tuple(json.loads(l)))
-    clus, coh = kmeans(dp, k)
+    clus, coh = kmeans(dp, k)       # cluster and cohesion
     
     for c in clus: print sorted(c)  # Print clusters out
-    print coh               # Print cohesion out
+    print coh                       # Print cohesion out
 
